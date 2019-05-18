@@ -4,8 +4,8 @@ color pink = #FFCCCC;
 void setup() {
   size(1200, 900);
   background(0);
-  int row = 15;
-  int col = 20;
+  int row = 30;
+  int col = 40;
   int w = width/col;
   int h = height/row;
   for (int i = 0; i < col; i++) {
@@ -59,7 +59,13 @@ class Piece {
     pushStyle();
     pushMatrix();
     noStroke();
-    color c = brighten(baseColor, cpos);
+    
+    float cp = cpos;
+    int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
+    //println(dist);
+    float maxRange =300;
+    if(dist < maxRange) cp += map(dist, maxRange, 0, 0, 50);
+    color c = brighten(baseColor, cp);
     //println(red(c), green(c), blue(c));
     fill(c);
     rect(pos.x, pos.y, w, h);
@@ -72,9 +78,6 @@ class Piece {
     cvel += cacc;
     cpos += cvel;
     //println(cpos, cvel, cacc);
-    
-    //int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
-    //println(dist);
   }
 }
 
