@@ -10,7 +10,6 @@ void setup() {
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
       Piece p = new Piece(i * w, j * h, w, h);
-      p.c = color(random(255));
       pieces.add(p);
     }
   }
@@ -31,7 +30,8 @@ class Piece {
   int w = 0;
   int h = 0;
   color c = color(255, 255, 255);
-  float cvelMax;
+  float ck;   // multiplier for: acc = -k * pos
+  float cpos; // the difference level between base color and display color;
   float cvel; // velocity of color change
   float cacc; // acceleration of color change
 
@@ -41,29 +41,29 @@ class Piece {
     this.w = w;
     this.h = h;
     c = baseColor;
-    cvelMax = 10;
-    cvel = cvelMax;
-    cacc = -0.2;
+    ck = .001;
+    cpos = 0;
+    cvel = 3;
+    cacc = 0;
   }
 
   void display() {
     pushStyle();
     pushMatrix();
     noStroke();
-    fill(c);
+    color displayColor = brighten(c, cpos);
+    println(red(displayColor), green(displayColor), blue(displayColor));
+    fill(displayColor);
     rect(pos.x, pos.y, w, h);
     popMatrix();
     popStyle();
   }
 
   void update() {
-    if(cvel < -cvelMax || cvel > cvelMax){
-      cacc *= -1;
-    }
+    cacc = -ck * cpos;
     cvel += cacc;
-    
-    c = brighten(c, cvel);
-    println(red(c), green(c), blue(c));
+    cpos += cvel;
+    println(cpos, cvel, cacc);
     
     //int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
     //println(dist);
