@@ -1,15 +1,16 @@
 ArrayList<Piece> pieces = new ArrayList<Piece>();
+color pink = #FFCCCC;
 
 void setup() {
   size(1200, 900);
   background(0);
-  int row = 1;//30;
-  int col = 2;//40;
+  int row = 15;
+  int col = 20;
   int w = width/col;
   int h = height/row;
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
-      Piece p = new Piece(i * w, j * h, w, h);
+      Piece p = new Piece(i * w, j * h, w, h, pink, random(0.0001, 0.001), random(-0.8, 0.8));
       pieces.add(p);
     }
   }
@@ -23,37 +24,44 @@ void draw() {
   }
 }
 
-color baseColor = #FFCCCC;
 
 class Piece {
   PVector pos = new PVector(0, 0);
   int w = 0;
   int h = 0;
-  color c = color(255, 255, 255);
-  float ck;   // multiplier for: acc = -k * pos
-  float cpos; // the difference level between base color and display color;
-  float cvel; // velocity of color change
-  float cacc; // acceleration of color change
+  color baseColor = color(255, 255, 255);
+  float ck = 0.001;   // multiplier for: acc = -k * pos
+  float cpos = 0; // the difference level between base color and display color;
+  float cvel = 1; // velocity of color change
+  float cacc = 0; // acceleration of color change
 
-  Piece(int x, int y, int w, int h) {
-    pos.x = x;
-    pos.y = y;
+  Piece(int x, int y, int w, int h, color c) {
+    this.pos.x = x;
+    this.pos.y = y;
     this.w = w;
     this.h = h;
-    c = baseColor;
-    ck = .001;
-    cpos = 0;
-    cvel = 3;
-    cacc = 0;
+    this.baseColor = c;
+  }
+  
+  Piece(int x, int y, int w, int h, color c, float ck, float cvel) {
+    this.pos.x = x;
+    this.pos.y = y;
+    this.w = w;
+    this.h = h;
+    this.baseColor = c;
+    this.ck = ck;
+    this.cpos = 0;
+    this.cvel = cvel;
+    this.cacc = 0;
   }
 
   void display() {
     pushStyle();
     pushMatrix();
     noStroke();
-    color displayColor = brighten(c, cpos);
-    println(red(displayColor), green(displayColor), blue(displayColor));
-    fill(displayColor);
+    color c = brighten(baseColor, cpos);
+    //println(red(c), green(c), blue(c));
+    fill(c);
     rect(pos.x, pos.y, w, h);
     popMatrix();
     popStyle();
@@ -63,7 +71,7 @@ class Piece {
     cacc = -ck * cpos;
     cvel += cacc;
     cpos += cvel;
-    println(cpos, cvel, cacc);
+    //println(cpos, cvel, cacc);
     
     //int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
     //println(dist);
