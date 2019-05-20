@@ -1,11 +1,13 @@
 ArrayList<Piece> pieces = new ArrayList<Piece>();
+color white = #FFFFFF;
+color black = #000000;
 color pink = #FFCCCC;
 
 void setup() {
+  frameRate(10);
   size(1200, 900);
-  background(0);
-  int row = 30;
-  int col = 40;
+  int row = 3;//30;
+  int col = 4;//40;
   int w = width/col;
   int h = height/row;
   for (int i = 0; i < col; i++) {
@@ -29,7 +31,8 @@ class Piece {
   PVector pos = new PVector(0, 0);
   int w = 0;
   int h = 0;
-  color baseColor = color(255, 255, 255);
+  color baseColor = white;
+  color targetColor = white;
   float ck = 0.001;   // multiplier for: acc = -k * pos
   float cpos = 0; // the difference level between base color and display color;
   float cvel = 1; // velocity of color change
@@ -60,12 +63,15 @@ class Piece {
     pushMatrix();
     noStroke();
     
-    float cp = cpos;
-    int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
-    //println(dist);
-    float maxRange =300;
-    if(dist < maxRange) cp += map(dist, maxRange, 0, 0, 50);
-    color c = brighten(baseColor, cp);
+    // apply mouse distant on cpos, into cp; apply cp on baseColor to get the final color.
+    //float cp = cpos;
+    //int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
+    //float maxRange =300;
+    //if(dist < maxRange) cp += map(dist, maxRange, 0, 0, 50);
+    //color c = brighten(baseColor, cp);
+    
+    baseColor = colorTransition(baseColor, targetColor, 0.2);
+    color c = baseColor;
     //println(red(c), green(c), blue(c));
     fill(c);
     rect(pos.x, pos.y, w, h);
@@ -81,6 +87,19 @@ class Piece {
   }
 }
 
+color colorTransition(color base, color target, float ratio) {
+  float rbase, gbase, bbase, rtarget, gtarget, btarget;
+  rbase = red(base);
+  gbase = green(base);
+  bbase = blue(base);
+  rtarget = red(target);
+  gtarget = green(target);
+  btarget = blue(target);
+  float r = abs(rbase - rtarget) <= 1 ? rtarget : map(ratio, 0, 1, rbase, rtarget);
+  float g = abs(gbase - gtarget) <= 1 ? gtarget : map(ratio, 0, 1, gbase, gtarget);
+  float b = abs(bbase - btarget) <= 1 ? btarget : map(ratio, 0, 1, bbase, btarget);
+  return color(r, g, b);
+}
 
 color brighten(color c, float d) {
   float r = red(c) + d;
