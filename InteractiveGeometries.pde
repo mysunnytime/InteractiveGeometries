@@ -6,13 +6,13 @@ color pink = #FFCCCC;
 void setup() {
   frameRate(10);
   size(1200, 900);
-  int row = 3;//30;
-  int col = 4;//40;
+  int row = 30;
+  int col = 40;
   int w = width/col;
   int h = height/row;
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
-      Piece p = new Piece(i * w, j * h, w, h, pink, random(0.0001, 0.001), random(-0.8, 0.8));
+      Piece p = new Piece(i * w, j * h, w, h, pink, random(0.5), random(-2, 2));
       pieces.add(p);
     }
   }
@@ -62,16 +62,20 @@ class Piece {
     pushStyle();
     pushMatrix();
     noStroke();
-    
+    color c;         // final color
+    float cp = cpos; // final brightening level
+
     // apply mouse distant on cpos, into cp; apply cp on baseColor to get the final color.
-    //float cp = cpos;
     //int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
     //float maxRange =300;
     //if(dist < maxRange) cp += map(dist, maxRange, 0, 0, 50);
-    //color c = brighten(baseColor, cp);
     
+    // transit baseColor to targetColor
     baseColor = colorTransition(baseColor, targetColor, 0.2);
-    color c = baseColor;
+    
+    // apply brightening
+    c = brighten(baseColor, cp);
+    
     //println(red(c), green(c), blue(c));
     fill(c);
     rect(pos.x, pos.y, w, h);
@@ -82,6 +86,7 @@ class Piece {
   void update() {
     cacc = -ck * cpos;
     cvel += cacc;
+    cvel *= 0.9;
     cpos += cvel;
     //println(cpos, cvel, cacc);
   }
