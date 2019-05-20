@@ -12,7 +12,7 @@ void setup() {
   int h = height/row;
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
-      Piece p = new Piece(i * w, j * h, w, h, pink, random(0.5), random(-2, 2));
+      Piece p = new Piece(i * w, j * h, w, h, white, random(0.5), 0);
       pieces.add(p);
     }
   }
@@ -64,11 +64,6 @@ class Piece {
     noStroke();
     color c;         // final color
     float cp = cpos; // final brightening level
-
-    // apply mouse distant on cpos, into cp; apply cp on baseColor to get the final color.
-    //int dist = (int)dist(pos.x, pos.y, mouseX, mouseY);
-    //float maxRange =300;
-    //if(dist < maxRange) cp += map(dist, maxRange, 0, 0, 50);
     
     // transit baseColor to targetColor
     baseColor = colorTransition(baseColor, targetColor, 0.2);
@@ -115,5 +110,11 @@ color brighten(color c, float d) {
 }
 
 void mouseClicked() {
-  
+  for(Piece p : pieces){
+    float range = 200;
+    float dist = dist(p.pos.x, p.pos.y, mouseX, mouseY);
+    if(dist < range) {
+      p.cvel = 2;
+    }
+  }
 }
