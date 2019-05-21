@@ -12,7 +12,7 @@ void setup() {
   int h = height/row;
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
-      Piece p = new Piece(i * w, j * h, w, h, pink, pink, random(0.5), 0);
+      Piece p = new Piece(i * w, j * h, w, h, pink, random(0.05, 0.5), 0);
       pieces.add(p);
     }
   }
@@ -26,22 +26,19 @@ void draw() {
   }
 }
 
-
 class Piece {
   PVector pos = new PVector(0, 0);
   int w = 0;
   int h = 0;
   color baseColor = white;
-  color targetColor = white;
   BrighteningLevel brighteningLevel = new BrighteningLevel();
 
-  Piece(int x, int y, int w, int h, color baseColor, color targetColor, float brighteningLevelK, float brighteningLevelVel) {
+  Piece(int x, int y, int w, int h, color baseColor, float brighteningLevelK, float brighteningLevelVel) {
     this.pos.x = x;
     this.pos.y = y;
     this.w = w;
     this.h = h;
     this.baseColor = baseColor;
-    this.targetColor = targetColor;
     brighteningLevel.k = brighteningLevelK;
     brighteningLevel.vel = brighteningLevelVel;
   }
@@ -52,9 +49,6 @@ class Piece {
     noStroke();
     color c;         // final color
     float cp = brighteningLevel.pos; // final brightening level
-    
-    // transit baseColor to targetColor
-    baseColor = colorTransition(baseColor, targetColor, 0.2);
     
     // apply brightening
     c = brighten(baseColor, cp);
@@ -68,7 +62,6 @@ class Piece {
 
   void update() {
     brighteningLevel.update();
-    
     //println(cpos, cvel, cacc);
   }
 }

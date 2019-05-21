@@ -9,8 +9,8 @@ class MovingModel{
 }
 
 class BrighteningLevel extends MovingModel{
-  float k;
-  void update() {    
+  float k; // frequency, bigger k = shortter loop.
+  void update() {
     acc = -k * pos;
     vel += acc;
     vel *= 0.9;
