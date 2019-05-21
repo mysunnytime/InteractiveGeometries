@@ -12,7 +12,7 @@ void setup() {
   int h = height/row;
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
-      Piece p = new Piece(i * w, j * h, w, h, white, random(0.5), 0);
+      Piece p = new Piece(i * w, j * h, w, h, pink, pink, random(0.5), 0);
       pieces.add(p);
     }
   }
@@ -33,29 +33,17 @@ class Piece {
   int h = 0;
   color baseColor = white;
   color targetColor = white;
-  float ck = 0.001;   // multiplier for: acc = -k * pos
-  float cpos = 0; // the difference level between base color and display color;
-  float cvel = 1; // velocity of color change
-  float cacc = 0; // acceleration of color change
+  BrighteningLevel brighteningLevel = new BrighteningLevel();
 
-  Piece(int x, int y, int w, int h, color c) {
+  Piece(int x, int y, int w, int h, color baseColor, color targetColor, float brighteningLevelK, float brighteningLevelVel) {
     this.pos.x = x;
     this.pos.y = y;
     this.w = w;
     this.h = h;
-    this.baseColor = c;
-  }
-  
-  Piece(int x, int y, int w, int h, color c, float ck, float cvel) {
-    this.pos.x = x;
-    this.pos.y = y;
-    this.w = w;
-    this.h = h;
-    this.baseColor = c;
-    this.ck = ck;
-    this.cpos = 0;
-    this.cvel = cvel;
-    this.cacc = 0;
+    this.baseColor = baseColor;
+    this.targetColor = targetColor;
+    brighteningLevel.k = brighteningLevelK;
+    brighteningLevel.vel = brighteningLevelVel;
   }
 
   void display() {
@@ -63,7 +51,7 @@ class Piece {
     pushMatrix();
     noStroke();
     color c;         // final color
-    float cp = cpos; // final brightening level
+    float cp = brighteningLevel.pos; // final brightening level
     
     // transit baseColor to targetColor
     baseColor = colorTransition(baseColor, targetColor, 0.2);
@@ -79,10 +67,8 @@ class Piece {
   }
 
   void update() {
-    cacc = -ck * cpos;
-    cvel += cacc;
-    cvel *= 0.9;
-    cpos += cvel;
+    brighteningLevel.update();
+    
     //println(cpos, cvel, cacc);
   }
 }
@@ -109,12 +95,12 @@ color brighten(color c, float d) {
   return c;
 }
 
-void mouseClicked() {
+void mouseMoved() {
   for(Piece p : pieces){
-    float range = 200;
+    float range = 100;
     float dist = dist(p.pos.x, p.pos.y, mouseX, mouseY);
     if(dist < range) {
-      p.cvel = 2;
+      p.brighteningLevel.vel = 8;
     }
   }
 }
