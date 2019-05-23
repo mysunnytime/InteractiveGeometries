@@ -2,17 +2,18 @@ ArrayList<Piece> pieces = new ArrayList<Piece>();
 color white = #FFFFFF;
 color black = #000000;
 color pink = #FFCCCC;
+color blue = #5F36DE;
 
 void setup() {
   frameRate(10);
   size(1200, 900);
-  int row = 30;
-  int col = 40;
+  int row = 45;
+  int col = 60;
   int w = width/col;
   int h = height/row;
   for (int i = 0; i < col; i++) {
     for (int j = 0; j < row; j++) {
-      Piece p = new Piece(i * w, j * h, w, h, pink, random(0.05, 0.5), 0);
+      Piece p = new Piece(i * w, j * h, w, h, blue, random(0.05, 0.5), 0);
       pieces.add(p);
     }
   }
@@ -90,10 +91,10 @@ color brighten(color c, float d) {
 
 void mouseMoved() {
   for(Piece p : pieces){
-    float range = 100;
+    float range = 150 * constrain(dist(pmouseX, pmouseY, mouseX, mouseY)/50, 0, 1);
     float dist = dist(p.pos.x, p.pos.y, mouseX, mouseY);
     if(dist < range) {
-      p.brighteningLevel.vel = 8;
+      p.brighteningLevel.vel = 20;
     }
   }
 }
