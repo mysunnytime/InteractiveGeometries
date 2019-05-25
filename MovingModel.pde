@@ -1,3 +1,5 @@
+// Moving Model and Extended Classes
+
 class MovingModel{
   float pos;
   float vel;
