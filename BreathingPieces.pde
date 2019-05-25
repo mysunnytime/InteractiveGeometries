@@ -61,7 +61,6 @@ class Piece {
     // apply brightening
     c = brighten(baseColor, cp);
 
-    //println(red(c), green(c), blue(c));
     fill(c);
     rect(pos.x, pos.y, w, h);
     popMatrix();
@@ -70,6 +69,5 @@ class Piece {
 
   void update() {
     brighteningLevel.update();
-    //println(cpos, cvel, cacc);
   }
 }

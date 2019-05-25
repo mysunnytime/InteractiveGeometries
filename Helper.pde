@@ -1,5 +1,4 @@
 // Color Controls
-
 color white = #FFFFFF;
 color black = #000000;
 color pink = #FFCCCC;
